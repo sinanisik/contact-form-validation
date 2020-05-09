@@ -2,11 +2,16 @@ import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from "yup";
 
+const phoneRegExp = RegExp(
+    /^[+]*[0-9]*[ ]{0,1}[(]{0,1}[ ]{0,1}[0-9]{1,3}[ ]{0,1}[)]{0,1}[ ]{0,1}[0-9]{1,3}[ ]{0,1}[0-9]{2}[ ]{0,1}[0-9]{2}[ ]{0,1}[-\.\/]{0,1}[ ]{0,1}[0-9]{1,5}$/g
+)
+
 const formValidation = Yup.object().shape({
     first: Yup.string().required("Please enter a name"),
-    last: Yup.string().required("Please enter a lastname"),
-    phone: Yup.number(),
-    email: Yup.string().email().required("Please enter an valid email adress"),
+    last: Yup.string().required("Please enter a last name"),
+    phone: Yup.string().matches(phoneRegExp, 'Phone number is not valid.'),
+    email: Yup.string().email("Email adress is not valid").required("Please enter an email adress"),
+    url: Yup.string().url("URL is not valid")
 });
 
 
@@ -25,12 +30,9 @@ const Form = () => {
                 }}
                 validationSchema={formValidation}
                 onSubmit={(values, { resetForm, setSubmitting }) => {
-                    setTimeout(() => {
                         alert("Form successfully submitted");
                         alert(JSON.stringify(values, null, 2));
-                        setSubmitting(false);
                         resetForm({})
-                    }, 1500)
                 }}
             >
                 {({
@@ -44,49 +46,70 @@ const Form = () => {
                         <div className="form-wrapper">
                             <h1>Contact Us</h1>
                             <form onSubmit={handleSubmit}>
-                                <div class="firstName">
+                                <div class="form-field firstName">
                                     <label for="first">First Name</label>
                                     <input
+                                        className={errors.first ? "error" : null}
                                         type="text"
+                                        placeholder="First Name"
                                         value={values.first}
                                         onChange={handleChange}
                                         class="form-control"
-                                        placeholder=""
-                                        id="first" />
+                                        id="first"
+                                    />
+                                    {
+                                        errors.first && (
+                                            <span className="errorMessage">{errors.first}</span>
+                                        )
+                                    }
                                 </div>
-                                <div class="lastName">
+                                <div class="form-field   lastName">
                                     <label for="last">Last Name</label>
                                     <input
+                                        className={errors.last ? "error" : null}
+                                        placeholder="Last Name"
                                         type="text"
                                         value={values.last}
                                         onChange={handleChange}
                                         class="form-control"
-                                        placeholder=""
-                                        id="last" />
+                                        id="last"
+                                    />
+                                    {
+                                        errors.last && (
+                                            <span className="errorMessage">{errors.last}</span>
+                                        )
+                                    }
                                 </div>
 
-                                <div class="company">
+                                <div class="form-field  company">
                                     <label for="company">Company</label>
                                     <input
                                         type="text"
                                         value={values.company}
                                         onChange={handleChange}
                                         class="form-control"
-                                        placeholder=""
+                                        placeholder="Company"
                                         id="company" />
                                 </div>
-                                <div class="phone">
+                                <div class="form-field phone">
                                     <label for="phone">Phone Number</label>
                                     <input
+                                        className={errors.phone ? "error" : null}
                                         type="tel"
                                         value={values.phone}
                                         onChange={handleChange}
                                         class="form-control"
                                         id="phone"
-                                        placeholder="phone" />
+                                        placeholder="+90 (xxx) xxx xx xx"
+                                    />
+                                    {
+                                        errors.phone && (
+                                            <span className="errorMessage">{errors.phone}</span>
+                                        )
+                                    }
                                 </div>
 
-                                <div class="email">
+                                <div class="form-field  email">
                                     <label for="email">Email address</label>
                                     <input
                                         type="email"
@@ -94,10 +117,16 @@ const Form = () => {
                                         onChange={handleChange}
                                         class="form-control"
                                         id="email"
-                                        placeholder="email" />
+                                        placeholder="Email"
+                                    />
+                                    {
+                                        errors.email && (
+                                            <span className="errorMessage">{errors.email}</span>
+                                        )
+                                    }
                                 </div>
 
-                                <div class="url">
+                                <div class="form-field  url">
                                     <label for="url">Your Website <small>Please include http://</small></label>
                                     <input
                                         type="url"
@@ -105,7 +134,13 @@ const Form = () => {
                                         onChange={handleChange}
                                         class="form-control"
                                         id="url"
-                                        placeholder="url" />
+                                        placeholder="Url"
+                                    />
+                                    {
+                                        errors.url && (
+                                            <span className="errorMessage">{errors.url}</span>
+                                        )
+                                    }
                                 </div>
 
                                 <div className="preference">
